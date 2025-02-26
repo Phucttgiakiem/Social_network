@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/Social_network/static/css/main.dcddfee6.css",
+    "main.js": "/Social_network/static/js/main.817adcb3.js",
+    "static/js/592.1cbe652f.chunk.js": "/Social_network/static/js/592.1cbe652f.chunk.js",
+    "static/media/Sofia Pro Bold Az.otf": "/Social_network/static/media/Sofia Pro Bold Az.48c71aa3dea90cd4f94e.otf",
+    "static/media/ProximaNova-Bold.woff": "/Social_network/static/media/ProximaNova-Bold.7bbe1c8847f08b1633a0.woff",
+    "static/media/ProximaNova-Regular.woff2": "/Social_network/static/media/ProximaNova-Regular.c4c3616c5577f9e7ef87.woff2",
+    "static/media/ProximaNova-Semibold.woff2": "/Social_network/static/media/ProximaNova-Semibold.54b9eb90d4b941f9371e.woff2",
+    "static/media/logo.svg": "/Social_network/static/media/logo.a17f0f5fed747d3aac900202a6f3087b.svg",
+    "index.html": "/Social_network/index.html",
+    "main.dcddfee6.css.map": "/Social_network/static/css/main.dcddfee6.css.map",
+    "main.817adcb3.js.map": "/Social_network/static/js/main.817adcb3.js.map",
+    "592.1cbe652f.chunk.js.map": "/Social_network/static/js/592.1cbe652f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dcddfee6.css",
+    "static/js/main.817adcb3.js"
+  ]
+}
