@@ -84,7 +84,7 @@ function Posts () {
                             Swal.showLoading();
 
                             try {
-                                const { data } = await axios.post('http://localhost:8096/api/removepost', { idpost: id });
+                                const { data } = await axios.post('https://social-network-be-ll5p.onrender.com/api/removepost', { idpost: id });
                                 
 
                                 // Sau khi nhận được dữ liệu, dừng loading
@@ -235,7 +235,7 @@ function Posts () {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await axios.post('http://localhost:8096/api/getallpostnecessary', {
+                const data = await axios.post('https://social-network-be-ll5p.onrender.com/api/getallpostnecessary', {
                     iduser: Cookies.get('iduser')
                 });
               //  console.log(data);

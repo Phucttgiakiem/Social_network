@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = "http://localhost:8096";
+const URL = "https://social-network-be-ll5p.onrender.com";
 
 export const logintk = (payload) => axios.post(`${URL}/api/login`,payload);
 export const registertk = () => axios.post(`${URL}/api/register`);

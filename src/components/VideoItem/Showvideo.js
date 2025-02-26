@@ -42,7 +42,7 @@ function Showvideo({ prop,user}) {
             replacestatusshowlogin()
         }else{
             try {
-                const {data} = await axios.post('http://localhost:8096/api/createLikepost',{
+                const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/createLikepost',{
                     iduser: user.id,
                     idpost: prop.idpost,
                 })
@@ -58,7 +58,7 @@ function Showvideo({ prop,user}) {
             replacestatusshowlogin()
         }else{
             try {
-                const {data} = await axios.post('http://localhost:8096/api/removeLikepost',{
+                const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/removeLikepost',{
                     iduser : user.id,
                     idpost: prop.idpost
                 })

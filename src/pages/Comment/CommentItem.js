@@ -29,7 +29,7 @@ function CommentItem({ comment,editingCommentId, setEditingCommentId,onRemove,id
         setEditingCommentId(null); // Hủy chế độ chỉnh sửa
     };
     const handleEditcomment = async () => {
-        const {data} = await axios.post('http://localhost:8096/api/editcomment',{
+        const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/editcomment',{
             id: parseInt(id.split("-")[0]),
             idcomment: comment.id,
             newcomment: detailComment

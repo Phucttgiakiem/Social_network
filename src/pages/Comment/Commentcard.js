@@ -32,7 +32,7 @@ function Commentcard({page,errCode,commentitem,countcm}){
             dispatch(showAuthendialog())
         },[dispatch])
     const addcomment = async () => {
-        const {data} = await axios.post('http://localhost:8096/api/createcomment',{
+        const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/createcomment',{
             idpost: idPost,
             comment: inputStr,
             iduser: Cookies.get('iduser')
@@ -42,7 +42,7 @@ function Commentcard({page,errCode,commentitem,countcm}){
         dispatch(GetAllpost.ChangeTotalComment({id: idPost,countcomment:data.data}));
     }
     const removeComment = async (idcomment) => {
-        const {data} = await axios.post('http://localhost:8096/api/removecomment',{idcomment: idcomment});
+        const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/removecomment',{idcomment: idcomment});
       //  console.log(data);
         dispatch(GetAllpostsofowner.UpdateTotalcomment({id: idPost,countcomment:data.data}));
         dispatch(GetAllpost.ChangeTotalComment({id: idPost,countcomment:data.data}));

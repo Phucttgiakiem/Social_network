@@ -32,7 +32,7 @@ function Headercommentcard ({contentpost}) {
             replacestatusshowlogin()
         }else{
             try {
-                await axios.post('http://localhost:8096/api/createLikepost',{
+                await axios.post('https://social-network-be-ll5p.onrender.com/api/createLikepost',{
                     iduser: iduser,
                     idpost: id.split("-")[0],
                 })
@@ -47,7 +47,7 @@ function Headercommentcard ({contentpost}) {
             replacestatusshowlogin()
         }else{
             try {
-                await axios.post('http://localhost:8096/api/removeLikepost',{
+                await axios.post('https://social-network-be-ll5p.onrender.com/api/removeLikepost',{
                     iduser :iduser,
                     idpost: id.split("-")[0]
                 })

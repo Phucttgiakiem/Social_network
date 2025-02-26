@@ -38,7 +38,7 @@ function Editprofile ({prop}) {
     
     const fetchupdateprofile = async () => {
         dispatch(showloadingdata());
-        const {data} = await axios.post('http://localhost:8096/api/updateprofile',{
+        const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/updateprofile',{
             fullname:dataprofile.fullName,
             bio:dataprofile.bio,
             iduser:dataprofile.id

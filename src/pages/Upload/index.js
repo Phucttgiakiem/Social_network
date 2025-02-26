@@ -86,7 +86,7 @@ function Upload() {
             formData.append('data', JSON.stringify(datapost));
             try {
             
-                const {data} = await axios.post('http://localhost:8096/api/createpost', formData);
+                const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/createpost', formData);
                 if(data.errCode === 1) {
                     toast.error(`${data.message}`);
                 } else {

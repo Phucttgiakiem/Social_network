@@ -14,7 +14,7 @@ import { GetAllpost } from 'redux/actions';
 import io from 'socket.io-client';
 const cx = classNames.bind(styles);
 
-const socket = io('http://localhost:8096', {
+const socket = io('https://social-network-be-ll5p.onrender.com', {
     reconnection: true
 });
 
@@ -37,7 +37,7 @@ function Home() {
     console.log(postofuser);
    /*  const showPost = async (user) => {
         /* try {
-            const {data} = await axios.post("http://localhost:8096/api/getPost",{ Iduser: user.id || null});
+            const {data} = await axios.post("https://social-network-be-ll5p.onrender.com/api/getPost",{ Iduser: user.id || null});
             setDatapost(data.post);
         }catch(err){
             console.log(err);

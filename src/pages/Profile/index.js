@@ -27,7 +27,7 @@ function Profile() {
     },[dispatch])
     useEffect(() => {
         const fetchProfile = async() => {
-            const {data} = await axios.post('http://localhost:8096/api/Profileuser',{id:id});
+            const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/Profileuser',{id:id});
             if(data.errCode === 1){
                 window.location.replace('/');
             }

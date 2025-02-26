@@ -25,7 +25,7 @@ import { faMusic,faHeart,faCommentDots } from '@fortawesome/free-solid-svg-icons
 import { IoIosArrowDown } from "react-icons/io";
 const cx = classNames.bind(styles);
 export const Statecatalogonheader = createContext();
-const socket = io('http://localhost:8096', {
+const socket = io('https://social-network-be-ll5p.onrender.com', {
     reconnection: true
 });
 function Comment() {
@@ -78,7 +78,7 @@ function Comment() {
             replacestatusshowlogin()
         }else{
             try {
-                await axios.post('http://localhost:8096/api/createLikepost',{
+                await axios.post('https://social-network-be-ll5p.onrender.com/api/createLikepost',{
                     iduser: iduser,
                     idpost: id.split("-")[0],
                 })
@@ -93,7 +93,7 @@ function Comment() {
             replacestatusshowlogin()
         }else{
             try {
-                await axios.post('http://localhost:8096/api/removeLikepost',{
+                await axios.post('https://social-network-be-ll5p.onrender.com/api/removeLikepost',{
                     iduser :iduser,
                     idpost: id.split("-")[0]
                 })

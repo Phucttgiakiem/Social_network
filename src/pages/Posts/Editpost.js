@@ -34,7 +34,7 @@ function Editpost() {
         }
         else {
             try {
-                const {data} = await axios.post('http://localhost:8096/api/updatepost',datapost);
+                const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/updatepost',datapost);
                 if(data.errCode !== 0) {
                     toast.error(`${data.message}`);
                 } else {
