@@ -3,76 +3,78 @@ import { GetAllpost } from "redux/actions";
 
 export default function GetAllpostReducer(state = INIT_STATE.datapost, action) {
     switch (action.type) {
-        case GetAllpost.GetpostRequest.toString():
+        case GetAllpost.LoadPosts.toString():
             return {
                 ...state,
-            };
-        case GetAllpost.GetpostSuccess.toString():
+                loading:true
+            }
+        case GetAllpost.LoadPostsSuccess.toString():
             return {
                 ...state,
-                message: action.payload.message,
-                // postofuser: Array.isArray(action.payload.post) && action.payload.post.length > 0
-                //     ? [...(state.postofuser || []), ...action.payload.post]
-                //     : state.postofuser || [],
-                postofuser: [
-                    ...new Map([...state.postofuser, ...action.payload.post]
-                        .map(item => [item.idpost, item]) // Chỉ giữ lại post có id duy nhất
-                    ).values()
-                ]
-            };
-        case GetAllpost.GetpostFailure.toString():
+                loading: false,
+                _page: state._page + 1,
+                posts: [
+                    ...state.posts,
+                    ...action.payload.post
+                ],
+                hasMore: action.payload.post.length > 0
+            }
+        case GetAllpost.LoadPostsFail.toString():
             return {
                 ...state,
-            };
-        case GetAllpost.Resetstatepost.toString():
+                loading: false,
+                message:action.payload.message
+            }
+        case GetAllpost.ResetPosts.toString():
             return {
                 ...state,
-                message: "",
-                postofuser: [], // Đảm bảo reset về mảng rỗng
-            };
-
+                posts: [],
+            }
         case GetAllpost.ChangeTotallike.toString():
-            const updatedPosts = state.postofuser.map((item) =>
+            const updatedPosts = state.posts.map((item) =>
                 item.idpost === action.payload.id
                     ? { ...item, countlike: action.payload.countlike }
                     : item
             );
             return {
                 ...state,
-                postofuser: updatedPosts,
+                posts: updatedPosts,
             };
         case GetAllpost.ChangeTotalComment.toString():
-            const updatedPost = state.postofuser.map((item) =>
+            const updatedPost = state.posts.map((item) =>
                 item.idpost === action.payload.id
                     ? { ...item, countcomment: action.payload.countcomment }
                     : item
             );
-           // console.log("updated post: ", updatedPost);
             return {
                 ...state,
-                postofuser: updatedPost,
+                posts: updatedPost,
             };
-        case GetAllpost.UpdateStatelikeofuser.toString():
+        case GetAllpost.UpdateStatelikeofuser.toString(): {
+            
+            const updatedPosts = state.posts.map(item => {
+                if (item.idpost !== Number.parseInt(action.payload.id)) return item;
+                let newListLike;
+                if (action.payload.typelike === "addlike") {
+                    newListLike = [...item.listlike, { UserID: action.payload.UserID }];
+                } else {
+                    newListLike = item.listlike.filter(
+                        vl => vl.UserID !== action.payload.UserID
+                    );
+                }
 
-            let newlist = null;
-            if (action.payload.typelike === "addlike") {
-                newlist = state.postofuser.map((item) =>
-                    item.idpost === action.payload.id
-                        ? { ...item,listlike: [...item.listlike,{UserID: action.payload.UserID}]}
-                        : item
-                );
-            } else {
-                newlist = state.postofuser.map((item) =>
-                    item.idpost === action.payload.id
-                        ? { ...item,listlike: [...item.listlike.filter((vl) => vl.UserID !== action.payload.UserID)]}
-                        : item
-                );
-            }
-            console.log("newlist: ",state.postofuser);
+                return {
+                    ...item,
+                    listlike: newListLike,
+                    countlike: newListLike.length, 
+                };
+            });
+
             return {
                 ...state,
-                postofuser: newlist,
+                posts: updatedPosts,
             };
+        }
         default:
             return state;
     }

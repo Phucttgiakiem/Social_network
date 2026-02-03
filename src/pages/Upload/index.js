@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import { useState,useCallback} from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import axios from 'axios';
 import styles from './Upload.module.scss';
 import { useRef } from 'react';
@@ -8,6 +8,8 @@ import {toast} from 'react-toastify';
 import Cookies from 'js-cookie';
 import Button from 'components/Button';
 import { showloadingdata,hideloadingdata } from 'redux/actions';
+import { useNavigate } from "react-router-dom";
+import {DetailuserState$ } from 'redux/selectors';
 const cx = classNames.bind(styles);
 
 
@@ -18,19 +20,20 @@ function Upload() {
     const videoPlayerRef = useRef(null);
     const inputfileRef = useRef(null);
     const dispatch = useDispatch();
+    const user = useSelector(DetailuserState$);
+    const navigate = useNavigate();
     const [datapost,setDatapost] = useState({
         description: "",
         pathvideo: "",
         namemusicvideo: "",
-        iduser : Cookies.get('iduser')? Cookies.get('iduser') : "",
+        iduser : user?.id,
     })
-
     const cancalUpload = () => {
         setDatapost({
             description: "",
             pathvideo: "",
             namemusicvideo: "",
-            iduser: Cookies.get('iduser') ? Cookies.get('iduser') : "",
+            iduser: user?.id,
         });
         setFile(null); // Reset file state
         fileNameDisplayRef.current.value = "";
@@ -86,7 +89,7 @@ function Upload() {
             formData.append('data', JSON.stringify(datapost));
             try {
             
-                const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/createpost', formData);
+                const {data} = await axios.post('http://localhost:3000/api/createpost', formData);
                 if(data.errCode === 1) {
                     toast.error(`${data.message}`);
                 } else {
@@ -97,7 +100,7 @@ function Upload() {
                         description: "",
                         pathvideo: "",
                         namemusicvideo: "",
-                        iduser: Cookies.get('iduser') ? Cookies.get('iduser') : "",
+                        iduser: user?.id,
                     });
                     setFile(null); // Reset file state
     
@@ -125,7 +128,7 @@ function Upload() {
                 // Ensure loading is hidden after request completes, success or failure
                 dispatch(hideloadingdata());
                 setTimeout(()=> {
-                    window.location.replace("/mypost");
+                    navigate("/mypost");
                 },6000)
             }
 

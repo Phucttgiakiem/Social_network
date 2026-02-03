@@ -33,13 +33,17 @@ export const CreateAccount = {
 }
 
 export const GetAllpost = {
-    GetpostRequest: createAction('GetpostRequest',(payload) => payload),
+   /*  GetpostRequest: createAction('GetpostRequest',(payload) => payload),
     GetpostSuccess: createAction('GetpostSuccess',(payload) => payload),
     GetpostFailure: createAction('GetpostFailure',(err) => err),
-    Resetstatepost: createAction('Resetstatepost'),
+    Resetstatepost: createAction('Resetstatepost'), */
+    LoadPosts: createAction('LOAD_POSTS',(payload) => payload),
+    LoadPostsSuccess: createAction('LOAD_POSTS_SUCCESS',(payload) => payload),
+    LoadPostsFail: createAction('LOAD_POSTS_FAIL',(payload) => payload),
+    ResetPosts:createAction('RESET_POSTS'),
     ChangeTotallike: createAction('ChangeTotallike',(payload) => payload),
     ChangeTotalComment: createAction('ChangeTotalComment',(payload) => payload),
-    UpdateStatelikeofuser: createAction('Updatestatelikeofuser',(payload) => payload)
+    UpdateStatelikeofuser: createAction('UpdateStatelikeofuser',(payload) => payload)
 }
 
 export const GetAllpostsofowner = {
@@ -59,12 +63,12 @@ export const GetAllmessagesofpost = {
 }
 
 export const GetAllcomment = {
-    GetcommentRequest: createAction('GetcommentRequest',(payload) => payload),
-    GetcommentSuccess: createAction('GetcommentSuccess',(payload) => payload),
-    GetcommentFailure: createAction('GetcommentFailure',(err) => err),
-    Resetstatecomment: createAction('Resetstatecomment'),
-    Updatenewcomment: createAction('Updatenewcomment',(payload) => payload),
-    Updateavailablecomment: createAction('Updateavailablecomment',(payload) => payload),
+    LoadComment: createAction('LOAD_COMMENT',(payload) => payload),
+    LoadCommentSuccess: createAction('LOAD_COMMENT_SUCCESS',(payload) => payload),
+    LoadCommentFail: createAction('LOAD_COMMENT_FAIL',(payload) => payload),
+    ResetComment: createAction('RESET_COMMENT',(payload) => payload),
+    Updatenewcomment:createAction('UPDATE_NEW_COMMENT',(payload) => payload),
+    Updateavailablecomment:createAction('UPDATE_COMMENT',(payload)=>payload),
     Deleteavailablecomment: createAction('Deleteavailablecomment',(payload) => payload),
 }
 

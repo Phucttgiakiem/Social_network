@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { memo, useCallback,useState,useEffect,useRef } from 'react';
+import { useCallback,useState,useEffect,useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faCommentDots, faMusic, faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 import Videos from './Videos';
@@ -8,18 +8,14 @@ import styles from './Showvideo.module.scss';
 import Image from 'components/Image';
 import Button from 'components/Button';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { Link,useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { showAuthendialog} from 'redux/actions';
-import { GetAllpost } from 'redux/actions';
 
 const cx = classNames.bind(styles);
 
 function Showvideo({ prop,user}) {
-    console.log("Showvideo props:", prop.listlike);
     const VideoRef = useRef();
-    const iduser = Cookies.get('iduser');
     const id = prop.idpost
     const dispatch = useDispatch();
     const [isPortrait, setVideoStyle] = useState(false);
@@ -32,21 +28,16 @@ function Showvideo({ prop,user}) {
     const replacestatusshowlogin = useCallback(() => {
         dispatch(showAuthendialog())
     },[dispatch]);
-
-    const updatestatelike = useCallback((statuslike) => {
-        dispatch(GetAllpost.UpdateStatelikeofuser({id:id,typelike:statuslike,UserID:iduser}));
-    },[dispatch, id,iduser]);
     
     const addlike = async () => {
         if(user.id === undefined){
             replacestatusshowlogin()
         }else{
             try {
-                const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/createLikepost',{
+                await axios.post('http://localhost:3000/api/createLikepost',{
                     iduser: user.id,
                     idpost: prop.idpost,
                 })
-                updatestatelike("addlike")
             } catch(err){
                 console.log(err.response);
             }
@@ -58,11 +49,10 @@ function Showvideo({ prop,user}) {
             replacestatusshowlogin()
         }else{
             try {
-                const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/removeLikepost',{
+               await axios.post('http://localhost:3000/api/removeLikepost',{
                     iduser : user.id,
                     idpost: prop.idpost
                 })
-                updatestatelike("removelike")
             } catch (err){
                 console.log(err.response);
             }
@@ -154,7 +144,7 @@ function Showvideo({ prop,user}) {
                 </div>
                 <div className={cx('ActionContainer')}>
                         {
-                           prop.listlike.some(item => parseInt(item.UserID) ===  parseInt(iduser)) ?  
+                           prop.listlike.some(item => parseInt(item.UserID) ===  parseInt(user?.id)) ?  
                                 (
                                     <div className={cx('likeaction')} onClick={removelike}>
                                         <ButtonIcon rounded className={cx('btnlike')}>
@@ -186,4 +176,4 @@ function Showvideo({ prop,user}) {
     );
 }
 
-export default memo(Showvideo);
+export default Showvideo;

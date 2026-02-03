@@ -16,9 +16,10 @@ const cx = classNames.bind(styles);
 
 function CommentItem({ comment,editingCommentId, setEditingCommentId,onRemove,iduser}) {
     const [detailComment, setDetailComment] = useState(comment.Content || '');
-    const { id } = useParams();
     const [showPicker,setShowPicker] = useState(false);
     const isEditcomment = editingCommentId === comment.id;
+
+    //console.log("Content: ",detailComment)
 
     const handleEditClick = () => {
         // Chỉ cho phép chỉnh sửa nếu comment này chưa được chọn hoặc đang chỉnh sửa một comment khác
@@ -29,8 +30,7 @@ function CommentItem({ comment,editingCommentId, setEditingCommentId,onRemove,id
         setEditingCommentId(null); // Hủy chế độ chỉnh sửa
     };
     const handleEditcomment = async () => {
-        const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/editcomment',{
-            id: parseInt(id.split("-")[0]),
+        await axios.post('http://localhost:3000/api/editcomment',{
             idcomment: comment.id,
             newcomment: detailComment
         });

@@ -5,7 +5,7 @@ import { useNavigate,useParams } from "react-router-dom";
 import { memo } from "react";
 const cx = classNames.bind(styles);
 
-function Videocard ({prop,onScroll}) {
+function Videocard ({prop}) {
     const wrapperRef = useRef(null);
     const { id } = useParams();
     const [idPost, suffixId] = id.split("-").map(Number);
@@ -14,17 +14,8 @@ function Videocard ({prop,onScroll}) {
     const handleClick = (itemId) => {
         navigate(`/Comment/${itemId}-${suffixId}`); 
     };
-    const handleScroll = (event) => {
-        if (wrapperRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = wrapperRef.current;
-            if (scrollTop + clientHeight >= scrollHeight) {
-             //console.log(scrollTop+clientHeight," ",scrollHeight);
-                onScroll(true);
-            }
-        }
-    };
     return (
-        <div ref={wrapperRef} className={cx('wrapper')} onScroll={handleScroll}>
+        <div ref={wrapperRef} className={cx('wrapper')}>
             {
                 prop.map((item,index) => (
                     <div key={index} className={cx('cardvideo')} onClick={() => handleClick(item.id)}>

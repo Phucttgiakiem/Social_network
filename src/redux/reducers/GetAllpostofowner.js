@@ -17,34 +17,38 @@ export default function GetAllpostofownerreducer (state = INIT_STATE.datapostofo
                     ? [...(state.postdata || []), ...action.payload.post] : state.postdata || []
             }
         case GetAllpostsofowner.UpdateTotalcomment.toString():
-           // console.log("mày đã vào đây",action.payload);
             const totalcm = state.postdata.map(item =>
                 item.id === action.payload.id ?
                 {
                     ...item,
                     commentCount: action.payload.countcomment
                 }:item)
-          //  console.log("updated post two: ", totalcm);
             return {
                 ...state,
                 postdata: totalcm
             }
         case GetAllpostsofowner.UpdateIncreaselike.toString():
-            let newPosts = state.postdata.map((item) => 
-                item.id === action.payload.id ? 
-                {...item,likes: [...item.likes,action.payload.newuser]} : item
-            );
-           // let test = action.payload.newuser;
-            console.log("test newuser: ",newPosts[0]);
             return {
                 ...state,
-                postdata: newPosts
-            }
+                postdata: state.postdata.map(item =>
+                item.id === action.payload.id
+                    ? {
+                        ...item,
+                        likes: item.likes.some(
+                        vl => Number(vl.UserID) === Number(action.payload.UserID)
+                        )
+                        ? item.likes
+                        : [...item.likes, { UserID: String(action.payload.UserID) }]
+                    }
+                    : item
+                )
+            };
         case GetAllpostsofowner.UpdateDecreaselike.toString():
           //  console.log("action: ",action.payload.olduser.UserID);
             let updatedPosts = state.postdata.map(item => 
                 item.id === action.payload.id ?
-                {...item,likes: [...item.likes.filter(vl => vl.UserID !== action.payload.olduser.UserID)]} : item
+                {...item,likes: item.likes.filter(
+                vl => Number(vl.UserID) !== Number(action.payload.UserID))} : item
             )
          //   console.log("danh sach post cua nguoi dung sau xoalike: ",updatedPosts)
             return {

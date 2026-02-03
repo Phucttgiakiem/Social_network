@@ -7,26 +7,22 @@ import config from '~/config';
 import { RiUser3Line } from "react-icons/ri";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { AuthenLogin } from 'redux/actions';
-import {useDispatch } from 'react-redux';
+import {useDispatch,useSelector } from 'react-redux';
 import {useCallback } from 'react';
 import Menu from '~/components/Popper/Menu';
-import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import {DetailuserState$ } from 'redux/selectors';
 const cx = classNames.bind(styles);
 
 function HeaderUpload () {
-    const savedUser = {
-        email: Cookies.get('useremail'),
-        avatar: Cookies.get('avatar'),
-        fullName: Cookies.get('username'),
-        id: Cookies.get('iduser'),
-    };
-    const currentUserData = savedUser;
+    
+    const userData = useSelector(DetailuserState$);
+    
     const MENU_ITEMS = [
         {
             icon: <RiUser3Line />,
             title: "Profile",
-            to: `/profile/${currentUserData.email}`
+            to: `/profile/${userData.email}`
         },
         {
             icon: <RiLogoutBoxLine />,
@@ -44,19 +40,15 @@ function HeaderUpload () {
             case '/logout':
                 handleLogoutAccount();
                 break;
-            case `/profile/${currentUserData.email}`:
-                navigate(`/profile/${currentUserData.email}`);
+            case `/profile/${userData?.email}`:
+                navigate(`/profile/${userData?.email}`);
                 break;
             default:
         }
     };
     const handleLogoutAccount = useCallback(() => {
-        // remove all Cookies
-        Cookies.remove('useremail');
-        Cookies.remove('avatar');
-        Cookies.remove('username');
-        Cookies.remove('iduser');
         dispatch(AuthenLogin.AuthenLoginReset());
+        localStorage.removeItem('access_token');
         setTimeout(()=> {
             window.location.replace('/');
         },100)
@@ -72,7 +64,7 @@ function HeaderUpload () {
                     <Menu items={MENU_ITEMS} onChange={handleMenuChange}>
                             <Image
                                     src={
-                                        currentUserData.avatar ||
+                                        userData?.avatar ||
                                         'https://p16-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/03b6c4d4e9a3beb2a73ed5da264d9e9a.jpeg?biz_tag=tiktok_user.user_cover&lk3s=30310797&x-expires=1709859600&x-signature=U%2FNJ0pxNN5Q4UgG68KMndvBDstg%3D'
                                     }
                                     className={cx('user-avatar')}

@@ -16,7 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import Menu from '~/components/Popper/MenuOther';
 import Video from 'components/VideoItem/Videos';
 import Swal from 'sweetalert2'
-
+import { useSelector } from 'react-redux';
+import {DetailuserState$ } from 'redux/selectors';
 const cx = classNames.bind(styles);
 
 const DATA_SORT = [
@@ -44,7 +45,7 @@ function Posts () {
     const [cleanbtn,setCleanbtn] = useState(false);
     const [datasearch,setDatasearch] = useState([]);
     const navigate = useNavigate();
-    const iduser = Cookies.get('iduser');
+    const user = useSelector(DetailuserState$);
     const addtextsearch = (e) => {
         let text = e.target.value
         setContentsearch(text);
@@ -84,7 +85,7 @@ function Posts () {
                             Swal.showLoading();
 
                             try {
-                                const { data } = await axios.post('https://social-network-be-ll5p.onrender.com/api/removepost', { idpost: id });
+                                const { data } = await axios.post('http://localhost:3000/api/removepost', { idpost: id });
                                 
 
                                 // Sau khi nhận được dữ liệu, dừng loading
@@ -235,10 +236,10 @@ function Posts () {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await axios.post('https://social-network-be-ll5p.onrender.com/api/getallpostnecessary', {
-                    iduser: Cookies.get('iduser')
+                const data = await axios.post('http://localhost:3000/api/getallpostnecessary', {
+                    iduser: user?.id
                 });
-              //  console.log(data);
+                console.log(data);
                 setDatapost(data.data.post)
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -312,7 +313,7 @@ function Posts () {
                                                 <Link to={`/editpost?id=${item.id}&des=${item.description}&nameus=${item.namemusic}`}>
                                                     <span><MdEdit /></span>
                                                 </Link>
-                                                <Link to={`/Comment/${item.id}-${iduser}`}>
+                                                <Link to={`/Comment/${item.id}-${user?.id}`}>
                                                     <span><BiDetail /></span>
                                                 </Link>
                                                 <span onClick={()=> handleDeletevideo(item.id)}><RiDeleteBin6Fill /></span>

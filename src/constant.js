@@ -22,14 +22,18 @@ export const INIT_STATE = {
     },
     datapost : {
         message:"",
-        postofuser: []
+        _page:1,
+        loading:false,
+        hasMore: true,
+        posts: []
     },
     datapostofowner: {
-        pagepost:2,
         postdata: []
     },
     datacomment: {
-        page:1,
+        _page: 1,
+        loading: false,
+        hasMore: true,
         errCode: null,
         commentitem: []
     },

@@ -6,8 +6,8 @@ import styles from './Header.module.scss';
 import images from 'assets/images';
 import Button from '~/components/Button';
 import 'tippy.js/dist/tippy.css';
-import { Link,useNavigate } from 'react-router-dom';
-import { useState, useEffect,useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { useEffect,useCallback } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { AuthenLogin, showAuthendialog } from 'redux/actions';
 import {
@@ -20,13 +20,13 @@ import {
 
 import Menu from '~/components/Popper/Menu';
 // import { faKeybase } from '@fortawesome/free-brands-svg-icons';
-import { AuthenDialogState$, loginState$ } from 'redux/selectors';
+import { AuthenDialogState$, DetailuserState$ } from 'redux/selectors';
 import { faUser, faCoins, faGear } from '@fortawesome/free-solid-svg-icons';
 import { InboxIcon, MessageIcon, UploadIcon } from '~/components/Icons';
 import Image from '~/components/Image';
 import Search from '~/pages/Search';
 import Login from 'pages/login/Login';
-import Cookies from 'js-cookie';
+import { logoutAccount } from 'api';
 const cx = classNames.bind(styles);
 
 const MENU_ITEMS = [
@@ -99,45 +99,31 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-    const [currentUser, setCurrentUser] = useState(false);
-    const [Avatar, setAvatar] = useState('');
+    
     const {isshow} = useSelector(AuthenDialogState$);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     // Kiểm tra cookie để lấy thông tin user
-    const savedUser = {
-        email: Cookies.get('useremail'),
-        avatar: Cookies.get('avatar'),
-        fullName: Cookies.get('username'),
-        id: Cookies.get('iduser'),
-    };
+    const userData = useSelector(DetailuserState$);
 
-    //const {user} = useSelector(loginState$);
-    const currentUserData = savedUser;
     // Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.to) {
             case '/logout':
                 handleLogoutAccount();
                 break;
-            case `/profile/${savedUser.id}`:
-                window.location.replace(`/profile/${savedUser.id}`);
+            case `/profile/${userData?.id}`:
+                window.location.assign(`/profile/${userData?.id}`);
                 break;
             default:
                 break;
         }
     };
-    // const handleSaveuserinfo = () => {
-    //     Cookies.set('useremail', currentUserData.email, { expires: 1 });
-    //     Cookies.set('avatar', currentUserData.avatar, { expires: 1 });
-    //     Cookies.set('username', currentUserData.fullName, { expires: 1 });
-    //     Cookies.set('iduser', currentUserData.id, { expires: 1 });
-    // }
+    
     const userMenu = [
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View profile',
-            to: `/profile/${savedUser.id}`,
+            to: `/profile/${userData?.id}`,
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,
@@ -161,21 +147,18 @@ function Header() {
         dispatch(showAuthendialog());
     },[dispatch]);
     
-    const handleLogoutAccount = useCallback(() => {
-        // remove all Cookies
-        Cookies.remove('useremail');
-        Cookies.remove('avatar');
-        Cookies.remove('username');
-        Cookies.remove('iduser');
+    const handleLogoutAccount = useCallback(async() => {
+        await logoutAccount();
         dispatch(AuthenLogin.AuthenLoginReset());
-        window.location.reload();
+        localStorage.removeItem('access_token');
+        window.location.replace('/');
     },[dispatch])
 
     useEffect(() => {
-        if (!currentUserData && !currentUserData.email && Object.keys(currentUserData).length > 0) {
+        if (userData && !userData?.email && Object.keys(userData).length > 0) {
             handleLogin();
         }
-    }, [currentUserData]);
+    }, [userData]);
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
@@ -184,7 +167,7 @@ function Header() {
                 </Link>
                 <Search />
                 <div className={cx('actions')}>
-                    {currentUserData && currentUserData.email ? (
+                    {userData && userData?.email ? (
                         <>
                             <Tippy delay={[0, 50]} content="Upload video" placement="bottom">
                                 <Link to={"/upload"}>
@@ -213,11 +196,11 @@ function Header() {
                             </Button>
                         </>
                     )}
-                    <Menu items={currentUserData && currentUserData.email ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
-                        {currentUserData.email ? (
+                    <Menu items={userData && userData?.email ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
+                        {userData?.email ? (
                             <Image
                                 src={
-                                    currentUserData.avatar ||
+                                    userData?.avatar ||
                                     'https://p16-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/03b6c4d4e9a3beb2a73ed5da264d9e9a.jpeg?biz_tag=tiktok_user.user_cover&lk3s=30310797&x-expires=1709859600&x-signature=U%2FNJ0pxNN5Q4UgG68KMndvBDstg%3D'
                                 }
                                 className={cx('user-avatar')}

@@ -23,3 +23,5 @@ export const GetAllcomment$ = (state) => state.datacomment;
 export const GetStatusListComment$ = (state) => state.ShowListComment;
 
 export const StatusEditprofile$ = (state) => state.ShowEditprofile;
+
+export const DetailuserState$ = (state) => state.Login?.data;

@@ -1,4 +1,4 @@
-import { takeLatest, call,put } from "redux-saga/effects"
+import { takeLatest, call,put,select } from "redux-saga/effects"
 import * as actions from '../actions';
 import * as api from '../../api';
 import {toast} from 'react-toastify';
@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 function* fetchLoginSaga (action){
     try {
         const lg = yield call (api.logintk,action.payload);
-        console.log('login',lg.data);
+     //   console.log('login',lg.data);
         yield put(actions.AuthenLogin.AuthenLoginSuccess(lg.data));
         yield put(actions.hideloadingdata());
         if(lg.data.errCode === 0){
@@ -45,18 +45,24 @@ function* fetchForgotPassSaga (action){
 
 function* fetchGetAllpost (action){
     try{
-        const postresult = yield call (api.getAllpost,action.payload);
-        yield put(actions.GetAllpost.GetpostSuccess(postresult.data));
+        const {_limit } = action.payload;
+        const {_page,hasMore} = yield select(
+            state => state.datapost
+        )
+        if(!hasMore) return;
+        const postresult = yield call (api.getAllpost,{
+            _page,_limit
+        });
+        yield put(actions.GetAllpost.LoadPostsSuccess(postresult.data));
     }catch(err){
         console.error(err);
-        yield put(actions.GetAllpost.GetpostFailure(err));
+        yield put(actions.GetAllpost.LoadPostsFail(err));
     }
 }
 
 function* fetchGetAllpostsofowner (action){
     try{
         const postresult = yield call (api.getAllpostsofowner,action.payload);
-      //  console.log("all post of user: ",postresult.data);
         yield put(actions.GetAllpostsofowner.postSuccess(postresult.data));
     }catch(err){
         console.error(err);
@@ -103,11 +109,20 @@ function* fetchRegistermember (action){
 
 function* fetchAllcommentofpost (action){
     try {
-        const rs = yield call (api.getAllcomment,action.payload);
-      //  console.log(rs);
-        yield put (actions.GetAllcomment.GetcommentSuccess(rs.data));
-    }catch (err) {
-        yield put (actions.GetAllcomment.GetcommentFailure(err));
+        const {_limit,IDpost} = action.payload;
+        const {_page,hasMore} = yield select(
+            state => state.datacomment
+        )
+        //console.log(hasMore," ");
+        if(!hasMore) return;
+        const res = yield call(api.getAllcomment,{
+            IDpost:IDpost,
+            _page:_page,
+            _limit: _limit});
+        
+        yield put (actions.GetAllcomment.LoadCommentSuccess(res.data.data));
+    }catch(e){
+        yield put (actions.GetAllcomment.LoadCommentFail());
     }
 }
 function* mySaga(){
@@ -115,9 +130,9 @@ function* mySaga(){
     yield takeLatest(actions.Forgotpass.ForgotpassRequest,fetchForgotPassSaga);
     yield takeLatest(actions.CreateAuthencode.createcodeRequest,fetchCreatecodeAuthen);
     yield takeLatest(actions.CreateAccount.createaccountRequest,fetchRegistermember);
-    yield takeLatest(actions.GetAllpost.GetpostRequest,fetchGetAllpost);
+    yield takeLatest(actions.GetAllpost.LoadPosts,fetchGetAllpost);
     yield takeLatest(actions.GetAllpostsofowner.postRequest,fetchGetAllpostsofowner);
-    yield takeLatest(actions.GetAllcomment.GetcommentRequest,fetchAllcommentofpost);
+    yield takeLatest(actions.GetAllcomment.LoadComment,fetchAllcommentofpost);
 }
 
 export default mySaga;

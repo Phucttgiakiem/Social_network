@@ -38,7 +38,7 @@ function Editprofile ({prop}) {
     
     const fetchupdateprofile = async () => {
         dispatch(showloadingdata());
-        const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/updateprofile',{
+        const {data} = await axios.post('http://localhost:3000/api/updateprofile',{
             fullname:dataprofile.fullName,
             bio:dataprofile.bio,
             iduser:dataprofile.id
@@ -85,14 +85,6 @@ function Editprofile ({prop}) {
                                 placeholder='Type your username in field'
                                 onChange={(e) => setDataprofile({...dataprofile,fullName:e.target.value})}
                             />
-                        </div>
-                    </div>
-                    <div className={cx('wrapper-name')}>
-                        <div>
-                            <h3>Name</h3>
-                        </div>
-                        <div>
-                            <input type="text" placeholder='Type your name in field'/>
                         </div>
                     </div>
                     <div className={cx('wrapper-Bio')}>

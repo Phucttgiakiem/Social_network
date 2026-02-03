@@ -1,49 +1,66 @@
 import classNames from 'classnames/bind';
-import { useState,useCallback,useEffect } from 'react';
+import { useState,useCallback,useRef,useEffect } from 'react';
 import { useDispatch,useSelector} from 'react-redux';
 import { useParams } from 'react-router-dom';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import Cookies from 'js-cookie';
 //import io from 'socket.io-client';
 import axios from 'axios';
-import Image from 'components/Image';
 import Button from 'components/Button';
 import CommentItem from './CommentItem';
+import CardCommentloading from '../../components/LoadingCard/CardCommentloading/CardCommentloading';
 import { BsEmojiSmile } from "react-icons/bs";
 import { GetAllcomment, GetAllpost,GetAllpostsofowner, showAuthendialog } from 'redux/actions';
+import {GetAllcomment$} from 'redux/selectors';
 import Picker from "emoji-picker-react";
 import styles from './Commentcard.module.scss';
+import useInfiniteScroll from '../../hook/useInfiniteScroll';
+import socketIOService from '../../services/socketIOService';
 const cx = classNames.bind(styles);
 
-function Commentcard({page,errCode,commentitem,countcm}){
+function Commentcard({iduser}){
    // console.log(errCode);
     const { id } = useParams();
     const [idPost, suffixId] = id.split("-").map(Number);
+
     const [showPicker,setShowPicker] = useState(false);
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [inputStr, setInputStr] = useState("");
    // const [comment, setComment] = useState([]);
    // const [page,setPage] = useState(1);
-   
-   //console.log(commentitem);
-    const iduser = parseInt(Cookies.get('iduser'));
+    const triggerRef = useRef();
+    const {hasMore,loading,commentitem} = useSelector(GetAllcomment$);
+   // const iduser = parseInt(Cookies.get('iduser'));
     const dispatch = useDispatch();
     const replacestatusshowlogin = useCallback(() => {
             dispatch(showAuthendialog())
         },[dispatch])
+    useEffect(()=> {
+        socketIOService.on('add-comment',newltcm => {
+            dispatch(GetAllcomment.Updatenewcomment(newltcm));
+        })
+        socketIOService.on('remove-com',commentdelete => {
+            dispatch(GetAllcomment.Deleteavailablecomment(commentdelete));
+        }) 
+        socketIOService.on('edit-com',commentedit => {
+            dispatch(GetAllcomment.Updateavailablecomment(commentedit));
+        })
+        return () => {
+            socketIOService.off('add-comment');
+            socketIOService.off('remove-com');
+            socketIOService.off('edit-com');
+        };
+    },[])
     const addcomment = async () => {
-        const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/createcomment',{
+        const {data} = await axios.post('http://localhost:3000/api/createcomment',{
             idpost: idPost,
             comment: inputStr,
-            iduser: Cookies.get('iduser')
+            iduser
         });
         setInputStr('');
         dispatch(GetAllpostsofowner.UpdateTotalcomment({id: idPost,countcomment:data.data}));
         dispatch(GetAllpost.ChangeTotalComment({id: idPost,countcomment:data.data}));
     }
     const removeComment = async (idcomment) => {
-        const {data} = await axios.post('https://social-network-be-ll5p.onrender.com/api/removecomment',{idcomment: idcomment});
-      //  console.log(data);
+        const {data} = await axios.post('http://localhost:3000/api/removecomment',{idcomment: idcomment});
         dispatch(GetAllpostsofowner.UpdateTotalcomment({id: idPost,countcomment:data.data}));
         dispatch(GetAllpost.ChangeTotalComment({id: idPost,countcomment:data.data}));
     }
@@ -52,65 +69,50 @@ function Commentcard({page,errCode,commentitem,countcm}){
         setEditingCommentId(null);
     };
     const onEmojiClick = (event, emojiObject) => {
-        console.log(emojiObject.EmojiClickData);
+       // console.log(emojiObject.EmojiClickData);
         setInputStr((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };
-    const fetchcommentlieoutside = useCallback(() => {
-        console.log("Fetching more comments...");
-        dispatch(GetAllcomment.GetcommentRequest({IDpost: idPost,_limit:6,_page:page + 1}))
-    },[dispatch,page]);
-    useEffect(()=> {
-        dispatch(GetAllcomment.Resetstatecomment());
-        const fetchcomment = ()=>{
-            dispatch(GetAllcomment.GetcommentRequest({IDpost: idPost,_limit:6,_page:1}))
+    /* useInfiniteScroll(triggerRef, () => {
+        if (hasMore) {
+            dispatch(GetAllcomment.LoadComment({IDpost: idPost,_limit:6}));
         }
-        fetchcomment()
-    },[dispatch,idPost]);
+    }); */
+    useInfiniteScroll({triggerRef,
+        loadAction:GetAllcomment.LoadComment,
+        selectState: GetAllcomment$,
+        payload: {
+            IDpost: idPost,
+            _limit: 6
+        },
+        options: {
+            root: document.querySelector('#wrapper_comment'),
+            threshold: 0.1,
+            rootMargin: '200px'
+        }
+    })
+    useEffect(() => {
+        dispatch(GetAllcomment.ResetComment());
+        dispatch(GetAllcomment.LoadComment({ IDpost: idPost, _limit: 6 }));
+    }, [idPost]);
+
     return (
         <>
                 <div className={cx('Detail_all_comments')} id="wrapper_comment">
-                    {commentitem.length === 0 ? (
-                        <div className={cx('wrapper_none_comment')}>
-                            <span>
-                                <Image src="/chat.png" className='img-nonecomment' />
-                            </span>
+                    {commentitem.length > 0 && commentitem.map(cmt => (
+                        <CommentItem key={cmt.id} comment={cmt} iduser={iduser} editingCommentId={editingCommentId}
+                                    setEditingCommentId={setEditingCommentId} onRemove={removeComment}/>
+                        ))}
+                    {
+                        <div ref={triggerRef}>
+                            {loading &&
+                                Array.from({ length: 6 }).map((_, i) => (
+                                    <CardCommentloading key={i} />
+                                ))
+                            }
+                        </div>
+                    }
 
-                            <span className={cx('inform_comment')}>Không có comment</span>
-                        </div>
-                    ) : (
-                        <div className={cx('wrapper_comment')} >
-                            {commentitem.map((detailcomment, index) => (
-                                <CommentItem
-                                    comment={detailcomment}
-                                    key={index}
-                                    onRemove={removeComment}
-                                    editingCommentId={editingCommentId}
-                                    setEditingCommentId={setEditingCommentId}
-                                    iduser={iduser} />
-                            ))}
-                            <InfiniteScroll
-                                dataLength={commentitem.length}
-                                next={fetchcommentlieoutside}
-                                hasMore={errCode === 0}
-                                loader={
-                                    <div className={cx('inform-scroll')}>
-                                        <h4>Loading...</h4>
-                                    </div>
-                                }
-                                endMessage={
-                                    <div className={cx('inform-scroll')}>
-                                        <p>
-                                            <b>the last of result for search</b>
-                                        </p>
-                                    </div>
-                                }
-                                scrollThreshold={0.8}
-                                scrollableTarget="wrapper_comment"
-                            >
-                            </InfiniteScroll>
-                        </div>
-                    )}
                 </div>
                 <div className={cx('Footer')}>
                     <div className={cx('func_another')}>
