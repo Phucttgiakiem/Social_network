@@ -37,7 +37,7 @@ function CommentItem({ comment,editingCommentId, setEditingCommentId,onRemove,id
         handleCancelEdit();
     }
     const onEmojiClick = (event, emojiObject) => {
-        console.log(emojiObject.EmojiClickData);
+        
         setDetailComment((prevInput) => prevInput + emojiObject.emoji);
         setShowPicker(false);
     };

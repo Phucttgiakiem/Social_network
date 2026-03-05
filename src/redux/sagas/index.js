@@ -28,7 +28,7 @@ function* fetchLoginSaga (action){
 function* fetchForgotPassSaga (action){
     try {
         const fp = yield call (api.forgotpasstk,action.payload);
-        console.log('forgotpass',fp);
+        
         yield put(actions.Forgotpass.ForgotpassSuccess(fp.data));
         yield put(actions.hideloadingdata());
         if(fp.data.errCode === 0){
@@ -73,7 +73,7 @@ function* fetchGetAllpostsofowner (action){
 function* fetchCreatecodeAuthen (action){
     try{
         const coderesult = yield call (api.authenemailgetpass,action.payload);
-        console.log('resultcallapicode',coderesult);
+        
         yield put(actions.CreateAuthencode.createcodeSuccess(coderesult));
         yield put(actions.hideloadingdata());
         if(coderesult.data.errCode === 0){
@@ -91,7 +91,7 @@ function* fetchCreatecodeAuthen (action){
 function* fetchRegistermember (action){
     try{
         const fr = yield call (api.createaccount,action.payload);
-        console.log('resultofregister',fr.data);
+        
         yield put(actions.CreateAccount.createaccountSuccess(fr.data));
         yield put(actions.hideloadingdata());
         if(fr.data.errCode !== 0){

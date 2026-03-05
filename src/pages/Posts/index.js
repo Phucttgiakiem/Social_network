@@ -239,7 +239,7 @@ function Posts () {
                 const data = await axios.post('http://localhost:3000/api/getallpostnecessary', {
                     iduser: user?.id
                 });
-                console.log(data);
+                
                 setDatapost(data.data.post)
             } catch (error) {
                 console.error("Error fetching data:", error);
