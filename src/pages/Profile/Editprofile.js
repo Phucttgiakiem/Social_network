@@ -38,7 +38,7 @@ function Editprofile ({prop}) {
     
     const fetchupdateprofile = async () => {
         dispatch(showloadingdata());
-        const {data} = await axios.post('http://localhost:3000/api/updateprofile',{
+        const {data} = await axios.post(`${process.env.SERVER_APP_URL}/updateprofile`,{
             fullname:dataprofile.fullName,
             bio:dataprofile.bio,
             iduser:dataprofile.id

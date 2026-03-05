@@ -34,7 +34,7 @@ function Editpost() {
         }
         else {
             try {
-                const {data} = await axios.post('http://localhost:3000/api/updatepost',datapost);
+                const {data} = await axios.post(`${process.env.SERVER_APP_URL}/updatepost`,datapost);
                 if(data.errCode !== 0) {
                     toast.error(`${data.message}`);
                 } else {

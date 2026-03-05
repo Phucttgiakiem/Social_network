@@ -30,7 +30,7 @@ function CommentItem({ comment,editingCommentId, setEditingCommentId,onRemove,id
         setEditingCommentId(null); // Hủy chế độ chỉnh sửa
     };
     const handleEditcomment = async () => {
-        await axios.post('http://localhost:3000/api/editcomment',{
+        await axios.post(`${process.env.SERVER_APP_URL}/editcomment`,{
             idcomment: comment.id,
             newcomment: detailComment
         });

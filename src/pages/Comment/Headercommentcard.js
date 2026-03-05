@@ -38,7 +38,7 @@ function Headercommentcard ({contentpost,commentCount}) {
             replacestatusshowlogin()
         }else{
             try {
-                await axios.post('http://localhost:3000/api/createLikepost',{
+                await axios.post(`${process.env.SERVER_APP_URL}/createLikepost`,{
                     iduser: user?.id,
                     idpost: Number.parseInt(id.split("-")[0]),
                 })
@@ -52,7 +52,7 @@ function Headercommentcard ({contentpost,commentCount}) {
             replacestatusshowlogin()
         }else{
             try {
-                await axios.post('http://localhost:3000/api/removeLikepost',{
+                await axios.post(`${process.env.SERVER_APP_URL}/removeLikepost`,{
                     iduser :user?.id,
                     idpost: Number.parseInt(id.split("-")[0])
                 })

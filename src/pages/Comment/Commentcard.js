@@ -50,7 +50,7 @@ function Commentcard({iduser}){
         };
     },[])
     const addcomment = async () => {
-        const {data} = await axios.post('http://localhost:3000/api/createcomment',{
+        const {data} = await axios.post(`${process.env.SERVER_APP_URL}/createcomment`,{
             idpost: idPost,
             comment: inputStr,
             iduser
@@ -60,7 +60,7 @@ function Commentcard({iduser}){
         dispatch(GetAllpost.ChangeTotalComment({id: idPost,countcomment:data.data}));
     }
     const removeComment = async (idcomment) => {
-        const {data} = await axios.post('http://localhost:3000/api/removecomment',{idcomment: idcomment});
+        const {data} = await axios.post(`${process.env.SERVER_APP_URL}/removecomment`,{idcomment: idcomment});
         dispatch(GetAllpostsofowner.UpdateTotalcomment({id: idPost,countcomment:data.data}));
         dispatch(GetAllpost.ChangeTotalComment({id: idPost,countcomment:data.data}));
     }
