@@ -58,16 +58,17 @@ function Home() {
     return (
         <div className={cx('home')} id="wrapper_post">
             {   
-                posts && posts.length > 0 && 
+                posts && posts.length > 0 ? 
                     posts.map((item) => (
                         <Showvideo
                             key={item.idpost}
                             prop={item}
                             user={user}
                         />  
-                    ))
+                    )) : 
+                    <h3>Không có bài đăng</h3>
             }
-            {
+            {!hasMore && (
                 <div ref={triggerRef}>
                     {loading &&
                         Array.from({ length: 6 }).map((_, i) => (
@@ -75,8 +76,7 @@ function Home() {
                         ))
                     }
                 </div>
-                
-            }
+            )}
         </div>
     )
 }

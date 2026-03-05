@@ -17,7 +17,7 @@ const LOAD_DELAY_MS = 300;
     },[ref,onLoadMore]);
 }
 export default useInfiniteScroll; */
-const useInfiniteScroll = ({triggerRef,loadAction,selectState,options,payload}) => {
+/* const useInfiniteScroll = ({triggerRef,loadAction,selectState,options,payload}) => {
     const dispatch = useDispatch();
     const {loading,hasMore } = useSelector(selectState);
     const handleEntry = useCallback(
@@ -45,4 +45,30 @@ const useInfiniteScroll = ({triggerRef,loadAction,selectState,options,payload}) 
         };
     },[triggerRef,onIntersect,options,handleEntry]);
 }
+export default useInfiniteScroll; */
+const useInfiniteScroll = ({ triggerRef, loadAction, selectState, options, payload }) => {
+    const dispatch = useDispatch();
+    const { loading, hasMore } = useSelector(selectState);
+
+    const onIntersect = useCallback(
+        (entries) => {
+            const entry = entries[0];
+
+            if (entry.isIntersecting && !loading && hasMore) {
+                dispatch(loadAction(payload));
+            }
+        },
+        [loading, hasMore, dispatch, loadAction, payload]
+    );
+
+    useEffect(() => {
+        const el = triggerRef.current;
+        if (!el) return;
+
+        const observer = new IntersectionObserver(onIntersect, options);
+        observer.observe(el);
+
+        return () => observer.disconnect();
+    }, [triggerRef, onIntersect, options]);
+};
 export default useInfiniteScroll;

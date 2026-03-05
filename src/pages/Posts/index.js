@@ -85,7 +85,7 @@ function Posts () {
                             Swal.showLoading();
 
                             try {
-                                const { data } = await axios.post(`${process.env.SERVER_APP_URL}/removepost`, { idpost: id });
+                                const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/removepost`, { idpost: id });
                                 
 
                                 // Sau khi nhận được dữ liệu, dừng loading
@@ -236,7 +236,7 @@ function Posts () {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await axios.post(`${process.env.SERVER_APP_URL}/getallpostnecessary`, {
+                const data = await axios.post(`${process.env.REACT_APP_SERVER_URL}/getallpostnecessary`, {
                     iduser: user?.id
                 });
                 

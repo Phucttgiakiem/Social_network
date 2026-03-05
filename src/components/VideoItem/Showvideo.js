@@ -34,7 +34,7 @@ function Showvideo({ prop,user}) {
             replacestatusshowlogin()
         }else{
             try {
-                await axios.post(`${process.env.SERVER_APP_URL}/createLikepost`,{
+                await axios.post(`${process.env.REACT_APP_SERVER_URL}/createLikepost`,{
                     iduser: user.id,
                     idpost: prop.idpost,
                 })
@@ -49,7 +49,7 @@ function Showvideo({ prop,user}) {
             replacestatusshowlogin()
         }else{
             try {
-               await axios.post(`${process.env.SERVER_APP_URL}/removeLikepost`,{
+               await axios.post(`${process.env.REACT_APP_SERVER_URL}/removeLikepost`,{
                     iduser : user.id,
                     idpost: prop.idpost
                 })

@@ -89,7 +89,7 @@ function Upload() {
             formData.append('data', JSON.stringify(datapost));
             try {
             
-                const {data} = await axios.post(`${process.env.SERVER_APP_URL}/createpost`, formData);
+                const {data} = await axios.post(`${process.env.REACT_APP_SERVER_URL}/createpost`, formData);
                 if(data.errCode === 1) {
                     toast.error(`${data.message}`);
                 } else {
