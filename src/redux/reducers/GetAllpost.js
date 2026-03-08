@@ -12,7 +12,7 @@ export default function GetAllpostReducer(state = INIT_STATE.datapost, action) {
             return {
                 ...state,
                 loading: false,
-                _page: action.payload.post.length > 0 ? state._page + 1 : state._page,
+                _page: action.payload.post && action.payload.post.length > 0 ? state._page + 1 : state._page,
                 posts: [
                     ...state.posts,
                     ...action.payload.post
