@@ -15,6 +15,7 @@ const cx = classNames.bind(styles);
 
 function Home() {
     const {hasMore,loading,posts} = useSelector(GetAllpostState$);
+    
     const triggerRef = useRef();
     const user = useSelector(loginState$)
     const dispatch = useDispatch();
@@ -68,7 +69,7 @@ function Home() {
                     )) : 
                     <h3>Không có bài đăng</h3>
             }
-            {!hasMore && (
+            {hasMore && (
                 <div ref={triggerRef}>
                     {loading &&
                         Array.from({ length: 6 }).map((_, i) => (

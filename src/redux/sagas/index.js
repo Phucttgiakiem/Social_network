@@ -53,6 +53,7 @@ function* fetchGetAllpost (action){
         const postresult = yield call (api.getAllpost,{
             _page,_limit
         });
+        console.log("API result:", postresult.data);
         yield put(actions.GetAllpost.LoadPostsSuccess(postresult.data));
     }catch(err){
         console.error(err);

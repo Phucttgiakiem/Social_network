@@ -8,7 +8,6 @@ export default function GetAllpostofownerreducer (state = INIT_STATE.datapostofo
                 ...state,
             }
         case GetAllpostsofowner.postSuccess.toString():
-          //  console.log("data fetch from server: ",action.payload);
             return {
                 ...state,
                 pagepost: action.payload.page,
