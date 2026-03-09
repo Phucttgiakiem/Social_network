@@ -5,7 +5,7 @@ class SocketIOService {
 
     connect() {
         if (!this.socket) {
-            this.socket = io("http://localhost:8096", {
+            this.socket = io("https://social-network-be-ll5p.onrender.com", {
                 transports: ["websocket"],
                 withCredentials: true,
             });
